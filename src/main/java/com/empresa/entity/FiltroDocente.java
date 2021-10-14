@@ -5,6 +5,9 @@ public class FiltroDocente {
 	private String nombre;
 	private String dni;
 	private int idUbigeo;
+	
+	
+	
 	public String getNombre() {
 		return nombre;
 	}

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.empresa.entity.FiltroModalidad;
 import com.empresa.entity.Modalidad;
 import com.empresa.service.ModalidadService;
 import com.empresa.util.Constantes;
@@ -51,4 +54,33 @@ public class ModalidadController {
 		return ResponseEntity.ok(salida);
 	}
 
+	
+	@GetMapping("/porNombre")
+	@ResponseBody
+	public ResponseEntity <Map<String, Object>> listarxFiltroconJson(@RequestBody FiltroModalidad filtro){
+		
+		Map<String, Object> salida = new HashMap<String, Object>();
+		
+		try {
+			filtro.setNombre("%" +filtro.getNombre() + "%");
+			List<Modalidad> lista = modalidadService.filtraxFiltro(filtro);
+				if(CollectionUtils.isEmpty(lista)) {
+					salida.put("mensaje", "No existe data for that request");
+				}else {
+					salida.put("mensaje", "That request have " +lista.size()+" elementos ");
+					salida.put("lista", lista );
+				}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+			salida.put("mensaje",   " Error "+ e.getMessage());
+		}
+
+		return ResponseEntity.ok(salida);
+				
+	}
+	
+	
+	
+	
 }
